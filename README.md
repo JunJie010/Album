@@ -4,7 +4,7 @@
 ![项目展示](制作过程纪念/成品展示.jpg)
 
 ## 项目职责
-* 通过Linux Framebuffer机制，mmap内存映射，调用文件IO函数**在开发板上显示图片**
+* 通过Linux FrameBuffer机制，mmap内存映射，调用文件IO函数**在开发板上显示图片**
 * 利用Linux输入子系统，捕获解析struct input_event，**实现基于坐标判别的触摸交互**
 ***
 **本项目是一个典型的三层嵌入式GUI应用**
@@ -25,4 +25,21 @@ Linux系统把每个设备都映射成一个文件，这就是设备文件。它
 字符设备的存取以一个字符为单位，块设备的存取以字符块为单位。每一种I/O设备对应一个设备文件，存放在/dev目录中，如行式打印机对应/dev/lp，第一个软盘驱动器对应/dev/fd0；
 
 在Ubuntu上编写代码，编写好代码后，在Ubuntu上交叉编译，把Ubuntu上交叉编译生产的可执行文件通过CRT上传到开发板，在开发板上执行可执行文件
+
+交叉编译```arm-linux-gcc 代码文件```;交叉编译并修改可生成的执行文件```arm-linux-gcc 代码文件 -o 目标名字```;运行```./ 可执行文件名```;
+
+步骤：
+* 准备一张图片
+* 在Ubuntu上编写代码，执行文件IO操作
+```
+int fp = open(path_name, O_RDONLY);                 //打开FrameBuffer设备，open函数打开图片文件
+lseek(fp, 54, SEEK_SET);                            //跳过BMP文件头(14字节)和信息头(40字节)
+ssize_t re_return = read(fp, buff, w * h * 3);      //read函数读取图片像素
+int cl_return = close(fp);                          //使用close函数关闭图片文件
+int lcd_fp = open("/dev/fb0", O_RDWR);              //使用open函数打开开发板上LCD设备文件
+int* p = mmap(NULL, 800 * 480 * 4, PROT_READ | PROT_WRITE, MAP_SHARED, lcd_fp, 0);        //内存映射
+*(q + x/m + ((h-1)-y)/m * 800) = buff[3*(x+y*w)]<<0 | buff[3*(x+y*w)+1]<<8 | buff[3*(x+y*w)+2]<<16;   //RGB转ARGB
+int cl_2_return = close(lcd_fp);                    //关闭LCD显示屏
+//注意，此处只做简单展示，详细代码请看控制代码
+```
 
