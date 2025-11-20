@@ -26,8 +26,6 @@ Linux系统把每个设备都映射成一个文件，这就是设备文件。它
 
 在Ubuntu上编写代码，编写好代码后，在Ubuntu上交叉编译，把Ubuntu上交叉编译生产的可执行文件通过CRT上传到开发板，在开发板上执行可执行文件
 
-交叉编译```arm-linux-gcc 代码文件```;交叉编译并修改可生成的执行文件```arm-linux-gcc 代码文件 -o 目标名字```;运行```./ 可执行文件名```;
-
 步骤：
 * 准备一张图片
 * 在Ubuntu上编写代码，执行文件IO操作
@@ -42,4 +40,7 @@ int* p = mmap(NULL, 800 * 480 * 4, PROT_READ | PROT_WRITE, MAP_SHARED, lcd_fp, 0
 int cl_2_return = close(lcd_fp);                    //关闭LCD显示屏
 //注意，此处只做简单展示，详细代码请看控制代码
 ```
+* 在Ubuntu上交叉编译
+交叉编译```arm-linux-gcc 代码文件```;交叉编译并修改可生成的执行文件```arm-linux-gcc 代码文件 -o 目标名字```;运行```./ 可执行文件名```;
+* 把
 
