@@ -62,14 +62,50 @@ int cl_2_return = close(lcd_fp);                    //关闭LCD显示屏
 * **传感器控制寄存器(ODH)**：8位寄存器，仅最高位有效，其他位保留，当最高位为 1 的时候，打开传感器（开始检测），当最高位设置为 0 的时候，关闭传感器（停止检测）
 * **坐标数据寄存器**：每个坐标的值，可以通过 4 个寄存器读出
 
+输入子系统：结构体：```input_event```
+```
+struct input_event
+{
+    struct timval time;
+    _u16 type;            //设备类型：EV_ABS 触摸屏
+    _u16 code;            //设备产生信息类型：x:ABS_X  y:ABS_Y 压力值：BTN_TOUCH
+    _s32 value;           //信息具体的数值
+}
+```
 ### 技术栈
 * Linux输入子系统：使用标准化的输入事件接口
 * 坐标校准：将触摸屏原始坐标(0-1024, 0-600)映射到屏幕分辨率(800×480)
 * 事件驱动架构：通过读取input_event结构体实现精确的触摸响应
 
 ### 步骤
-
-
+* 输入子系统
+```
+struct touch_xy
+{
+	int x;
+	int y;
+};
+struct input_event ts;      //Linux标准输入事件结构体
+struct touch_xy tu;
+```
+* open打开触摸屏```int touch_fp = open("/dev/input/event0", O_RDWR);```
+* read读取触摸屏```rd_num = read(touch_fp, &ts, sizeof(struct input_event));```
+* 坐标映射
+```
+if(ts.type == EV_ABS && ts.code == ABS_X) x = ts.value*800/1024;
+if(ts.type == EV_ABS && ts.code == ABS_Y) y = ts.value*480/600;
+```
+* 触摸释放事件
+```
+if (ts.type == EV_KEY && ts.code == BTN_TOUCH && ts.value == 0)
+		{
+			printf("松开坐标x=%d , y=%d\n", x, y);
+			tu.x = x;
+			tu.y = y;
+			break;
+		}
+```
+* 关闭触摸屏设备，```int cl_return = close(touch_fp);```
 
 
 
