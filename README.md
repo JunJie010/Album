@@ -2,7 +2,7 @@
 
 ## 项目预览
 ![项目展示](制作过程/成品展示.jpg)
-<video src="制作过程/成品展示.mp4" controls width="600">
+
 
 ## 项目职责
 * 通过Linux FrameBuffer机制，mmap内存映射，调用文件IO函数**在开发板上显示图片**
