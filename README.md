@@ -2,7 +2,7 @@
 
 ## 项目预览
 ![项目展示](制作过程/成品展示.jpg)
-
+[点击下载项目演示视频](https://github.com/JunJie010/Album/blob/main/%E5%88%B6%E4%BD%9C%E8%BF%87%E7%A8%8B/%E6%88%90%E5%93%81%E5%B1%95%E7%A4%BA.mp4)
 
 ## 项目职责
 * 通过Linux FrameBuffer机制，mmap内存映射，调用文件IO函数**在开发板上显示图片**
